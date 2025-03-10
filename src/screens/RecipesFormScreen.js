@@ -6,13 +6,18 @@ import {widthPercentageToDP as wp,heightPercentageToDP as hp,} from "react-nativ
 export default function RecipesFormScreen({ route, navigation }) {
   const { recipeToEdit, recipeIndex, onrecipeEdited } = route.params || {};
   const [title, setTitle] = useState(recipeToEdit ? recipeToEdit.title : "");
+  const [ingredients, setIngredients] = useState(
+    recipeToEdit && typeof recipeToEdit.ingredients === "string"
+      ? recipeToEdit.ingredients.split(",").map(item => item.trim())
+      : [""]
+  );
   const [image, setImage] = useState(recipeToEdit ? recipeToEdit.image : "");
   const [description, setDescription] = useState(
     recipeToEdit ? recipeToEdit.description : ""
   );
 
   const saverecipe = async () => {
-    const newRecipe = { title, image, description };
+    const newRecipe = { title, image, description, ingredients };
     try{
       var existingRecipes = await AsyncStorage.getItem("customrecipes");
       const recipes = existingRecipes ? JSON.parse(existingRecipes) : [];
@@ -35,6 +40,11 @@ export default function RecipesFormScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
+
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Text>Go back</Text>
+      </TouchableOpacity>
+
       <TextInput
         placeholder="Title"
         value={title}
@@ -53,12 +63,18 @@ export default function RecipesFormScreen({ route, navigation }) {
         <Text style={styles.imagePlaceholder}>Upload Image URL</Text>
       )}
       <TextInput
-        placeholder="Description"
+        placeholder="Step by step instructions"
         value={description}
         onChangeText={setDescription}
         multiline={true}
         numberOfLines={4}
         style={[styles.input, { height: hp(20), textAlignVertical: "top" }]}
+      />
+      <TextInput
+        placeholder="Ingredients (comma seperated)"
+        value={ingredients}
+        onChangeText={setIngredients}
+        style={styles.input}
       />
       <TouchableOpacity onPress={saverecipe} style={styles.saveButton}>
         <Text style={styles.saveButtonText}>Save recipe</Text>
@@ -102,6 +118,17 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
   },
   saveButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  backButton: {
+    backgroundColor: "#b1c246",
+    padding: wp(.5),
+    alignItems: "center",
+    borderRadius: 5,
+    marginTop: hp(2),
+  },
+  backButtonText: {
     color: "#fff",
     fontWeight: "bold",
   },
