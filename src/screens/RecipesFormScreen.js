@@ -42,7 +42,7 @@ export default function RecipesFormScreen({ route, navigation }) {
       </TouchableOpacity>
 
       <TextInput
-        placeholder="Title"
+        placeholder="Recipe Name"
         value={title}
         onChangeText={setTitle}
         style={styles.input}
