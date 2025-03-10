@@ -6,11 +6,7 @@ import {widthPercentageToDP as wp,heightPercentageToDP as hp,} from "react-nativ
 export default function RecipesFormScreen({ route, navigation }) {
   const { recipeToEdit, recipeIndex, onrecipeEdited } = route.params || {};
   const [title, setTitle] = useState(recipeToEdit ? recipeToEdit.title : "");
-  const [ingredients, setIngredients] = useState(
-    recipeToEdit && typeof recipeToEdit.ingredients === "string"
-      ? recipeToEdit.ingredients.split(",").map(item => item.trim())
-      : [""]
-  );
+  const [ingredients, setIngredients] = useState(recipeToEdit ? recipeToEdit.ingredients : "");
   const [image, setImage] = useState(recipeToEdit ? recipeToEdit.image : "");
   const [description, setDescription] = useState(
     recipeToEdit ? recipeToEdit.description : ""
@@ -71,7 +67,7 @@ export default function RecipesFormScreen({ route, navigation }) {
         style={[styles.input, { height: hp(20), textAlignVertical: "top" }]}
       />
       <TextInput
-        placeholder="Ingredients (comma seperated)"
+        placeholder="Ingredients"
         value={ingredients}
         onChangeText={setIngredients}
         style={styles.input}

@@ -92,23 +92,11 @@ export default function CustomRecipesScreen() {
         </View>
 
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle} >Ingredients</Text>
-          <View style={styles.ingredientsList}>
-            {recipe.ingredients && recipe.ingredients.length > 0 ? (
-              recipe.ingredients.map((i, index) => (
-                <View key={index} style={styles.ingredientItem}>
-                  <View style={styles.ingredientBullet} />
-                  <Text style={styles.ingredientText}>
-                    {i}
-                  </Text>
-                </View>
-              ))
-            ) : (
-              <Text style={styles.ingredientText}>No ingredients available</Text>
-            )}
-
-          </View>
-        </View>
+  <Text style={styles.sectionTitle}>Ingredients</Text>
+  <View style={styles.ingredientsList}>
+      <Text style={styles.ingredientText}>{recipe.ingredients}</Text>
+  </View>
+</View>
 
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Instructions</Text>

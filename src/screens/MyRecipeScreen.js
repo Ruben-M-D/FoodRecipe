@@ -84,7 +84,7 @@ import {
               recipes.map((recipe, index) => (
                 <View key={index} style={styles.recipeCard} testID="recipeCard">
                   <TouchableOpacity testID="handlerecipeBtn" onPress={() => handlerecipeClick(recipe)}>
-                    <Image source={{ uri: recipe.recipeImage }} style={styles.recipeImage} />
+                    <Image source={{ uri: recipe.image }} style={styles.recipeImage} />
                     <Text style={styles.recipeTitle}>{recipe.title}</Text>
                     <Text style={styles.recipeDescription} testID="recipeDescp">
                       {recipe.description.length > 50 ? `${recipe.description.slice(0, 50)}...` : recipe.description}
