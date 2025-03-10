@@ -128,6 +128,7 @@ import {
       alignItems: "center",
       borderRadius: 5,
       width:300,
+      alignSelf: "center",
       // marginBottom: hp(2),
     },
     addButtonText: {
