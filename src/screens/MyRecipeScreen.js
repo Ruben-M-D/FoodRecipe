@@ -9,7 +9,7 @@ import {
   } from "react-native";
   import React, { useEffect, useState } from "react";
   import AsyncStorage from "@react-native-async-storage/async-storage";
-  import { useNavigation } from "@react-navigation/native";
+  import { useFocusEffect, useNavigation } from "@react-navigation/native";
   import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -19,28 +19,48 @@ import {
     const navigation = useNavigation();
     const [recipes, setrecipes] = useState([]);
     const [loading, setLoading] = useState(true);
-  
+    
     useEffect(() => {
-      const fetchrecipes = async () => {
-        
-        };
-  
       fetchrecipes();
     }, []);
-  
-    const handleAddrecipe = () => {
 
+    useFocusEffect(
+      React.useCallback(() => {
+      fetchrecipes();
+      }, [])
+    );
+  
+    const fetchrecipes = async () => {
+      const storedrecipes = await AsyncStorage.getItem("customrecipes");
+      if (storedrecipes)
+      {
+        setrecipes(JSON.parse(storedrecipes));
+      }
+      setLoading(false);
+    };
+
+    const handleAddrecipe = () => {
+      navigation.navigate("RecipesFormScreen");
     };
   
     const handlerecipeClick = (recipe) => {
-
+      navigation.navigate("CustomRecipesScreen", { recipe });
     };
+
     const deleterecipe = async (index) => {
-    
+      try{
+        const updatedRecipes = [...recipes];
+        updatedRecipes.splice(index, 1);
+        await AsyncStorage.setItem("customrecipes", JSON.stringify(updatedRecipes));
+        setrecipes(updatedRecipes);
+      }catch (e)
+      {
+        console.error("Error deleting the recipe", error);
+      }
     };
   
     const editrecipe = (recipe, index) => {
-
+      navigation.navigate("RecipesFormScreen", { recipeToEdit: recipe, recipeIndex: index });
     };
   
     return (
@@ -64,17 +84,21 @@ import {
               recipes.map((recipe, index) => (
                 <View key={index} style={styles.recipeCard} testID="recipeCard">
                   <TouchableOpacity testID="handlerecipeBtn" onPress={() => handlerecipeClick(recipe)}>
-                  
+                    <Image source={{ uri: recipe.recipeImage }} style={styles.recipeImage} />
                     <Text style={styles.recipeTitle}>{recipe.title}</Text>
                     <Text style={styles.recipeDescription} testID="recipeDescp">
-                  
+                      {recipe.description.length > 50 ? `${recipe.description.slice(0, 50)}...` : recipe.description}
                     </Text>
                   </TouchableOpacity>
   
                   {/* Edit and Delete Buttons */}
                   <View style={styles.actionButtonsContainer} testID="editDeleteButtons">
-                    
-                
+                    <TouchableOpacity onPress={() => editrecipe(recipe, index)}>
+                      <Text style={styles.editButton}>Edit</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => deleterecipe(index)}>
+                      <Text style={styles.deleteButton}>Delete</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               ))
